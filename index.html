@@ -79,6 +79,7 @@
       <button class="tabbtn" data-tab="tab3">3) כלכלי</button>
       <button class="tabbtn" data-tab="tab4">4) תוצאות</button>
       <button class="tabbtn" data-tab="tab5">הגדרות</button>
+      <button class="tabbtn" id="btnLogout" title="התנתקות">התנתק</button>
     </div>
   </div>
 </header>
@@ -225,6 +226,27 @@
   </section>
 
 </main>
+<script type="module">
+  import { requireAuth, logout } from "./auth.js";
+
+  // אם אתה רוצה רק “מי שמחובר” בלי whitelist — תשאיר allowlist ריק/תמחק את הפרמטר
+  // אם אתה רוצה שרק מיילים ספציפיים יכנסו — מלא כאן:
+  const allowlist = [
+    // "eli@example.com",
+    // "someone@example.com"
+  ];
+
+  await requireAuth({ redirectTo: "login.html", allowlist });
+
+  // התנתקות (אם הוספת כפתור)
+  const btn = document.getElementById("btnLogout");
+  if(btn){
+    btn.addEventListener("click", async ()=>{
+      await logout();
+      location.href = "login.html";
+    });
+  }
+</script>
 
 <script>
 /* ========= Data Model ========= */
