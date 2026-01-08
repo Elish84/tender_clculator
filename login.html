@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>התחברות — מחשבון מכרז</title>
+  <style>
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0b1020;color:#eef2ff;font-family:system-ui}
+    .card{width:min(420px,92vw);background:rgba(18,26,51,.85);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px}
+    label{display:block;margin:10px 0 6px;font-size:12px;opacity:.9}
+    input{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(7,10,20,.55);color:#eef2ff;outline:none;direction:ltr;text-align:left}
+    button{width:100%;margin-top:14px;padding:11px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(159,177,255,.14);color:#eef2ff;font-weight:800;cursor:pointer}
+    .err{color:#ffb020;margin-top:10px;min-height:1.2em;font-size:12px}
+    .hint{opacity:.8;font-size:12px;line-height:1.4;margin-top:10px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 style="margin:0 0 6px 0;font-size:16px;">כניסה</h2>
+    <div class="hint">רק משתמשים שהוגדרו ב-Firebase Authentication יכולים להתחבר.</div>
+
+    <label>אימייל</label>
+    <input id="email" type="email" autocomplete="username" />
+
+    <label>סיסמה</label>
+    <input id="pass" type="password" autocomplete="current-password" />
+
+    <button id="btn">התחבר</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <script type="module">
+    import { login } from "./auth.js";
+
+    const $ = (id) => document.getElementById(id);
+    const err = $("err");
+
+    const qs = new URLSearchParams(location.search);
+    if (qs.get("err") === "not_allowed") {
+      err.textContent = "למשתמש הזה אין הרשאה.";
+    }
+
+    $("btn").onclick = async () => {
+      err.textContent = "";
+      try{
+        await login($("email").value.trim(), $("pass").value);
+        window.location.replace("index.html"); // אם שם הקובץ שלך שונה, עדכן כאן
+      }catch(e){
+        err.textContent = "התחברות נכשלה. בדוק אימייל/סיסמה.";
+      }
+    };
+  </script>
+</body>
+</html>
